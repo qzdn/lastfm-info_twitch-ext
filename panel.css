@@ -16,15 +16,6 @@ img {
     -ms-user-select: none;
 }
 
-a {
-    color: white;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 .container {
     position: relative;
     width: 100%;
