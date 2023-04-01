@@ -1,5 +1,6 @@
 let lastFmUsername;
 let lastFmApiKey;
+const MOCK_COVER = 'https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png'
 
 window.Twitch.ext.onAuthorized(() => {
     loadConfig();
@@ -7,7 +8,7 @@ window.Twitch.ext.onAuthorized(() => {
 
 window.Twitch.ext.configuration.onChanged(() => {
     loadConfig();
-    fetchNowPlaying();
+    fetchScrobblingNow();
 });
 
 function loadConfig() {
@@ -24,7 +25,7 @@ function loadConfig() {
     }
 }
 
-function fetchNowPlaying() {
+function fetchScrobblingNow() {
     // Check if lastFmUsername and lastFmApiKey are defined
     if (!lastFmUsername || !lastFmApiKey) {
         console.warn("Last.fm API credentials are undefined. Retrying in 5 seconds...");
@@ -40,14 +41,20 @@ function fetchNowPlaying() {
         if (request.status === 200) {
             try {
                 const recentTracks = JSON.parse(request.response).recenttracks;
-                const artist = recentTracks.track[0].artist['#text'];
-                const trackname = recentTracks.track[0].name;
-                const coverUrl = recentTracks.track[0].image[2]['#text'] || "https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png";
-                // ^ mock if cover is empty
-
-                document.getElementById("cover").src = coverUrl;
-                document.getElementById('artist').textContent = artist;
-                document.getElementById('trackname').textContent = trackname;
+                const coverUrl = recentTracks.track[0].image[2]['#text'] || MOCK_COVER; // mock if cover is empty
+                const trackname = recentTracks.track[0].name;  
+                const artist = recentTracks.track[0].artist['#text'];   
+                
+                if (recentTracks.track[0].hasOwnProperty('@attr')) // check if track is scrobbling rn or scrobbled before
+                {          
+                    document.getElementById("cover").src = coverUrl;
+                    document.getElementById('trackname').textContent = trackname;
+                    document.getElementById('artist').textContent = `by ${artist}`;
+                } else {
+                    document.getElementById("cover").src = coverUrl; // cover of last scrobbled track
+                    document.getElementById('trackname').textContent = "nothing";
+                    document.getElementById('artist').textContent = "";
+                }
             } catch (error) {
                 console.error('Error parsing JSON response:', error);
             }
@@ -58,9 +65,9 @@ function fetchNowPlaying() {
 
     request.onerror = () => {
         console.log('Error occurred while fetching now playing information. Retrying in 10 seconds...');
-        setTimeout(fetchNowPlaying, 10000);
+        setTimeout(fetchScrobblingNow, 10000);
     };
 }
 
 // update information every 15sec
-setInterval(fetchNowPlaying, 15000);
+setInterval(fetchScrobblingNow, 15000);

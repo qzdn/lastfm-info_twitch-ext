@@ -1,11 +1,19 @@
-body {
+html, body {
+    margin: 0; 
+    height: 100%; 
+    overflow: hidden;
     background-color: #0e0e10;
 }
 
 img {
-    width: 280px;
-    filter: blur(2px);
-    opacity: 0.33;
+    width: 100%;
+    filter: blur(3px);
+    opacity: 0.25;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 a {
@@ -19,6 +27,7 @@ a:hover {
 
 .container {
     position: relative;
+    width: 100%;
     text-align: center;
 }
 
@@ -31,14 +40,20 @@ a:hover {
     width: 270px;
 }
 
+#scrobbling-now {
+    font-size: 16px;
+    color: silver;
+    padding-bottom: 0.66em;
+}
+
 #trackname {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
     color: white;
-    padding-bottom: 0.5em;
+    padding-bottom: 0.25em;
 }
 
 #artist {
-    font-size: 18px;
+    font-size: 16px;
     color: silver;
 }
