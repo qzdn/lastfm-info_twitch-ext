@@ -1,6 +1,6 @@
 let lastFmUsername;
 let lastFmApiKey;
-const MOCK_COVER = 'https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png'
+const MOCK_COVER = 'https://picsum.photos/200'
 
 window.Twitch.ext.onAuthorized(() => {
     loadConfig();
