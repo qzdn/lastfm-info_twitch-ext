@@ -1,6 +1,6 @@
 let lastFmUsername;
 let lastFmApiKey;
-const MOCK_COVER = 'https://picsum.photos/200'
+const MOCK_COVER = 'https://picsum.photos/id/117/200'
 
 window.Twitch.ext.onAuthorized(() => {
     loadConfig();
@@ -25,10 +25,15 @@ function loadConfig() {
     }
 }
 
+// sometimes lastfm gives 404 on img, so we replace that img with the mock
+function replace404IMGtoMock() {
+  document.getElementById('cover').src = 'https://picsum.photos/id/117/200';
+}
+
 function fetchScrobblingNow() {
     // Check if lastFmUsername and lastFmApiKey are defined
     if (!lastFmUsername || !lastFmApiKey) {
-        console.warn("Last.fm API credentials are undefined. Retrying in 5 seconds...");
+        console.warn('Last.fm API credentials are undefined. Retrying in 5 seconds...');
         setTimeout(fetchNowPlaying, 5000);
         return;
     }
@@ -47,19 +52,20 @@ function fetchScrobblingNow() {
                 
                 if (recentTracks.track[0].hasOwnProperty('@attr')) // check if track is scrobbling rn or scrobbled before
                 {          
-                    document.getElementById("cover").src = coverUrl;
+                    document.getElementById('cover').src = coverUrl;
                     document.getElementById('trackname').textContent = trackname;
                     document.getElementById('artist').textContent = `by ${artist}`;
                 } else {
-                    document.getElementById("cover").src = coverUrl; // cover of last scrobbled track
-                    document.getElementById('trackname').textContent = "nothing";
-                    document.getElementById('artist').textContent = "";
+                    document.getElementById('cover').src = coverUrl; // cover of last scrobbled track
+                    document.getElementById('trackname').textContent = 'nothing';
+                    document.getElementById('artist').textContent = '';
                 }
+                document.getElementById('cover').addEventListener('error', replace404IMGtoMock); // if 404 or something else
             } catch (error) {
-                console.error('Error parsing JSON response:', error);
+                console.error('Error parsing JSON response: ', error);
             }
         } else {
-            console.error('Error fetching data from Last.fm API:', request.statusText);
+            console.error('Error fetching data from Last.fm API: ', request.statusText);
         }
     };
 
