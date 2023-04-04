@@ -7,5 +7,5 @@ The extension displays ‘Scrobbling now’ track information, such as artist na
 You can install this extension on your Twitch channel [here](https://dashboard.twitch.tv/extensions/qnsoh1zafcgcs0515my36c9kd6tdiq-0.2.0).
 
 # TODO
-- [ ] Show loved tracks
-- [ ] Add an option to show a link to the linked Last.fm profile 
+- [x] Show loved tracks
+- [ ] Add an option to show a link to the linked Last.fm profile
