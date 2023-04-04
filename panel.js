@@ -27,14 +27,14 @@ function loadConfig() {
 
 // sometimes lastfm gives 404 on img, so we replace that img with the mock
 function replace404IMGtoMock() {
-  document.getElementById('cover').src = 'https://picsum.photos/id/117/200';
+  document.getElementById('cover').src = MOCK_COVER;
 }
 
 function fetchScrobblingNow() {
     // Check if lastFmUsername and lastFmApiKey are defined
     if (!lastFmUsername || !lastFmApiKey) {
         console.warn('Last.fm API credentials are undefined. Retrying in 5 seconds...');
-        setTimeout(fetchNowPlaying, 5000);
+        setTimeout(fetchScrobblingNow, 5000);
         return;
     }
 
@@ -70,7 +70,7 @@ function fetchScrobblingNow() {
     };
 
     request.onerror = () => {
-        console.log('Error occurred while fetching now playing information. Retrying in 10 seconds...');
+        console.error('Error occurred while fetching now playing information. Retrying in 10 seconds...');
         setTimeout(fetchScrobblingNow, 10000);
     };
 }
