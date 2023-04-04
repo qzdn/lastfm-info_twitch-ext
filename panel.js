@@ -1,5 +1,6 @@
 let lastFmUsername;
 let lastFmApiKey;
+const LASTFM_BASE_URI = 'https://ws.audioscrobbler.com/2.0/'
 const MOCK_COVER = 'https://picsum.photos/id/117/200'
 
 window.Twitch.ext.onAuthorized(() => {
@@ -27,7 +28,7 @@ function loadConfig() {
 
 // sometimes lastfm gives 404 on img, so we replace that img with the mock
 function replace404IMGtoMock() {
-  document.getElementById('cover').src = MOCK_COVER;
+    document.getElementById('cover').src = MOCK_COVER;
 }
 
 function fetchScrobblingNow() {
@@ -39,7 +40,7 @@ function fetchScrobblingNow() {
     }
 
     const request = new XMLHttpRequest();
-    request.open('GET', `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${lastFmUsername}&api_key=${lastFmApiKey}&format=json&limit=1`);
+    request.open('GET', `${LASTFM_BASE_URI}?method=user.getrecenttracks&user=${lastFmUsername}&api_key=${lastFmApiKey}&extended=1&format=json&limit=1`);
     request.send();
 
     request.onload = () => {
@@ -47,12 +48,16 @@ function fetchScrobblingNow() {
             try {
                 const recentTracks = JSON.parse(request.response).recenttracks;
                 const coverUrl = recentTracks.track[0].image[2]['#text'] || MOCK_COVER; // mock if cover is empty
-                const trackname = recentTracks.track[0].name;  
-                const artist = recentTracks.track[0].artist['#text'];   
-                
-                if (recentTracks.track[0].hasOwnProperty('@attr')) // check if track is scrobbling rn or scrobbled before
-                {          
-                    document.getElementById('cover').src = coverUrl;
+                const artist = recentTracks.track[0].artist['name'];
+                const isLoved = recentTracks.track[0].loved;
+                let trackname = recentTracks.track[0].name;
+                if (isLoved === "1") {
+                    trackname = '❤️ ' + trackname;
+                }
+
+                if (recentTracks.track[0]?.['@attr']?.nowplaying) // check if track is scrobbling rn
+                {
+                    document.getElementById('cover').src = coverUrl; 
                     document.getElementById('trackname').textContent = trackname;
                     document.getElementById('artist').textContent = `by ${artist}`;
                 } else {

@@ -15,13 +15,13 @@ document.getElementById('config-form').addEventListener('submit', event => {
     const apiKey = document.getElementById('lastfm-apikey').value;
     const messageElement = document.getElementById('message');
     try {
-        window.Twitch.ext.configuration.set('broadcaster', 'qnsoh1zafcgcs0515my36c9kd6tdiq-v0.2.0', JSON.stringify({ lastFmUsername: username, lastFmApiKey: apiKey }));
+        window.Twitch.ext.configuration.set('broadcaster', 'qnsoh1zafcgcs0515my36c9kd6tdiq-v0.3.0', JSON.stringify({ lastFmUsername: username, lastFmApiKey: apiKey }));
         messageElement.textContent = 'Configuration saved successfully';
         messageElement.classList.remove('hidden', 'fail');
         messageElement.classList.add('success');
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
         messageElement.textContent = 'Error saving configuration';
         messageElement.classList.remove('hidden', 'success');
         messageElement.classList.add('fail');

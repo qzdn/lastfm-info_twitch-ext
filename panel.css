@@ -19,6 +19,7 @@ img {
 .container {
     position: relative;
     width: 100%;
+    max-width: 318px;
     text-align: center;
 }
 
