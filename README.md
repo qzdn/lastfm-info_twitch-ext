@@ -4,7 +4,7 @@ The extension displays ‘Scrobbling now’ track information, such as artist na
 ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://user-images.githubusercontent.com/6467022/229277242-2070807d-439b-4322-a13a-b24b6d8414f4.jpg)
 
 # Installation
-You can install this extension on your Twitch channel [here](https://dashboard.twitch.tv/extensions/qnsoh1zafcgcs0515my36c9kd6tdiq-0.2.0).
+You can install this extension on your Twitch channel [here](https://dashboard.twitch.tv/extensions/qnsoh1zafcgcs0515my36c9kd6tdiq-0.3.0).
 
 # TODO
 - [x] Show loved tracks
