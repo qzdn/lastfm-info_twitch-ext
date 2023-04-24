@@ -19,9 +19,8 @@ img {
 
 .container {
   position: relative;
-  width: 100%;
-  max-width: 318px;
   text-align: center;
+  width: 100%;
 }
 
 .centered {
@@ -31,7 +30,7 @@ img {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 270px;
+  width: 80%;
 }
 
 #scrobbling-now {

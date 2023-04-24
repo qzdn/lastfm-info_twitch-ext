@@ -57,7 +57,7 @@ function fetchScrobblingNow() {
 
                 if (recentTracks.track[0]?.['@attr']?.nowplaying) // check if track is scrobbling rn
                 {
-                    document.getElementById('cover').src = coverUrl; 
+                    document.getElementById('cover').src = coverUrl;
                     document.getElementById('trackname').textContent = trackname;
                     document.getElementById('artist').textContent = `by ${artist}`;
                 } else {
