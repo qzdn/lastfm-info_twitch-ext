@@ -1,7 +1,8 @@
 let lastFmUsername;
 let lastFmApiKey;
-const LASTFM_BASE_URI = 'https://ws.audioscrobbler.com/2.0/'
-const MOCK_COVER = 'https://picsum.photos/id/117/200'
+
+const LASTFM_BASE_URI = 'https://ws.audioscrobbler.com/2.0/';
+const MOCK_COVER = 'https://picsum.photos/id/117/200';
 
 window.Twitch.ext.onAuthorized(() => {
     loadConfig();
@@ -20,8 +21,8 @@ function loadConfig() {
             lastFmUsername = configParsed.lastFmUsername;
             lastFmApiKey = configParsed.lastFmApiKey;
         }
-        catch (err) {
-            console.error(err);
+        catch (error) {
+            console.error(error);
         }
     }
 }
@@ -31,11 +32,23 @@ function replace404IMGtoMock() {
     document.getElementById('cover').src = MOCK_COVER;
 }
 
+function updateTrackInfo(coverUrl, trackname, artist) {
+    const coverElement = document.getElementById('cover');
+    const tracknameElement = document.getElementById('trackname');
+    const artistElement = document.getElementById('artist');
+
+    coverElement.src = coverUrl;
+    tracknameElement.textContent = trackname;
+    artistElement.textContent = artist;
+
+    coverElement.addEventListener('error', replace404IMGtoMock); // if 404 or something else
+}
+
 function fetchScrobblingNow() {
     // Check if lastFmUsername and lastFmApiKey are defined
     if (!lastFmUsername || !lastFmApiKey) {
-        console.warn('Last.fm API credentials are undefined. Retrying in 5 seconds...');
-        setTimeout(fetchScrobblingNow, 5000);
+        console.warn('Last.fm API credentials are undefined. Retrying in 10 seconds...');
+        setTimeout(fetchScrobblingNow, 10 * 1000);
         return;
     }
 
@@ -46,26 +59,11 @@ function fetchScrobblingNow() {
     request.onload = () => {
         if (request.status === 200) {
             try {
-                const recentTracks = JSON.parse(request.response).recenttracks;
-                const coverUrl = recentTracks.track[0].image[2]['#text'] || MOCK_COVER; // mock if cover is empty
-                const artist = recentTracks.track[0].artist['name'];
-                const isLoved = recentTracks.track[0].loved;
-                let trackname = recentTracks.track[0].name;
-                if (isLoved === "1") {
-                    trackname = '❤️ ' + trackname;
-                }
-
-                if (recentTracks.track[0]?.['@attr']?.nowplaying) // check if track is scrobbling rn
-                {
-                    document.getElementById('cover').src = coverUrl;
-                    document.getElementById('trackname').textContent = trackname;
-                    document.getElementById('artist').textContent = `by ${artist}`;
-                } else {
-                    document.getElementById('cover').src = coverUrl; // cover of last scrobbled track
-                    document.getElementById('trackname').textContent = 'nothing';
-                    document.getElementById('artist').textContent = '';
-                }
-                document.getElementById('cover').addEventListener('error', replace404IMGtoMock); // if 404 or something else
+                const recentTrack = JSON.parse(request.response).recenttracks.track[0];
+                const coverUrl = recentTrack.image[2]['#text'] || MOCK_COVER; // mock if cover is empty
+                const trackname = (recentTrack.loved === "1") ? `❤️ ${recentTrack.name}` : recentTrack.name;
+                const artist = recentTrack.artist['name'];
+                (recentTrack?.['@attr']?.nowplaying) ? updateTrackInfo(coverUrl, trackname, `by ${artist}`) : updateTrackInfo(coverUrl, 'nothing', '');
             } catch (error) {
                 console.error('Error parsing JSON response: ', error);
             }
@@ -75,10 +73,9 @@ function fetchScrobblingNow() {
     };
 
     request.onerror = () => {
-        console.error('Error occurred while fetching now playing information. Retrying in 10 seconds...');
-        setTimeout(fetchScrobblingNow, 10000);
+        console.error('Error occurred while fetching info from Last.fm. Retrying in 10 seconds...');
+        setTimeout(fetchScrobblingNow, 10 * 1000);
     };
 }
 
-// update information every 15sec
-setInterval(fetchScrobblingNow, 15000);
+setInterval(fetchScrobblingNow, 15 * 1000);
