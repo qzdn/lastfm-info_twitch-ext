@@ -1,0 +1,51 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0e0e10;
+}
+
+img {
+    width: 100%;
+    filter: blur(3px);
+    opacity: 0.25;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.centered {
+    font-family: "Roobert", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+}
+
+#scrobbling-now {
+    font-size: 16px;
+    color: silver;
+    padding-bottom: 0.66em;
+}
+
+#trackname {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 0.25em;
+}
+
+#artist {
+    font-size: 16px;
+    color: silver;
+}
